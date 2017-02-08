@@ -1,17 +1,17 @@
 <template>
 	<div>
 		<curposition>
-			<span slot='ptitle'>基金产品</span>
-			<span slot='ctitle'>基金产品列表</span>
+			<span slot='ptitle'>基金管理人</span>
+			<span slot='ctitle'>基金管理人列表</span>
 		</curposition>
 
-		<flists :tonew='tonew'></flists>
+		<mclists :tonew='tonew'></mclists>
 	</div>
 </template>
 
 <script>
 	import curposition from './comms/curposition.vue'
-	import flists from './comms/flists.vue'
+	import mclists from './comms/mclists.vue'
 
   	export default{
   		data (){
@@ -24,12 +24,12 @@
   				currentPage: 1,		//当前页
   				checked: true,
   				display: true,		//true=不包含隐藏的基金产品，不设置表示查询所有基金产品
-  				tonew: true 		//是否显示新增按钮，仅产品列表页需要
+  				tonew: true 	//是否显示新增按钮
   			}
   		},
 
   		components: {
-  			curposition, flists
+  			curposition, mclists
   		}
   	}
 </script>

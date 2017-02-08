@@ -16,15 +16,44 @@
 		},
 
 		methods: {
-			logout: () => console.log("退出"),
+			logout () {
+				let that = this;
+				gl.fn.logOut({http: that.$http});
+			},
 
-			getUsername () {
-				this.username = this.$store.state.username;
+			getSession () {
+				let that = this;
+				let xpbtoken = gl.fn.getCookie("xpbtoken") || "";
+
+				gl.fn.getData({
+					http: that.$http,
+					url: gl.domain.session,
+					options: {
+						headers: {xpbtoken: xpbtoken}
+					},
+					successfn: function(data){
+						that.username = data.data.nickname || data.data.email;
+						//第一次登录，初始化菜单
+						gl.fn.limitUser({
+							http: that.$http,
+							url: gl.domain.aclurls,
+							successfn: function(data){
+								if(data.dataList[0] != "*"){
+									//受限用户
+									that.$store.dispatch('setLimitusertype', 2);
+								}else{
+									//非受限用户
+									that.$store.dispatch('setLimitusertype', 1);
+								}
+							}
+						})
+					}
+				})
 			}
 		},
 
 		mounted (){
-			this.getUsername();
+			this.getSession();
 		}
 	}
 </script>

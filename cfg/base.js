@@ -26,7 +26,7 @@ let config = {
         publicPath: defaultSettings.publicPath,
         noInfo: false,
         proxy: {
-            '/mc/api': {
+            '/op/api': {
                 target: 'http://120.24.219.112/',
                 secure: false
             },
@@ -42,7 +42,7 @@ let config = {
     },
     // 转化成es5的语法
     babel: {
-        presets: ['es2015'],
+        presets: ['es2015', 'stage-3'],
         plugins: ['transform-runtime', ['component', [
             {
               "libraryName": "element-ui",
@@ -54,14 +54,16 @@ let config = {
         extensions: ['', '.js', '.vue'],
         alias: {
             src: `${defaultSettings.srcPath}/`,
+            gl: `${defaultSettings.srcPath}/libs/global.js`,
             'vue': 'vue/dist/vue.js'
             // jquery: `${defaultSettings.srcPath}/libs/jquery.min.js`
         }
     },
     plugins: [
-        // new webpack.ProvidePlugin({ //载入jq,这样就不用每个里面都require了，直接使用  $
-        //     $: "jquery"
-        // }),
+        new webpack.ProvidePlugin({ //载入jq,这样就不用每个里面都require了，直接使用  $
+            // $: "jquery"
+            gl: 'gl'
+        }),
     	new webpack.optimize.CommonsChunkPlugin({
             name: 'vendors', // 将公共模块提取，生成名为`vendors`的chunk
             chunks: chunks,
