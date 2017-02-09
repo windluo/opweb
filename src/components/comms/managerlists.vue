@@ -77,7 +77,7 @@
 					>
 					  	<i class="el-icon-upload"></i>
 					  	<div class="el-dragger__text">将文件拖到此处，或<em>点击上传</em></div>
-					  	<div class="el-upload__tip" slot="tip">{{uploadmsg}}</div>
+					  	<div class="el-upload__tip" :class="{error:isimgerr}" slot="tip">{{uploadmsg}}</div>
 					</el-upload>
 		    	</el-form-item>
 		    	<el-form-item label="描述" :label-width="formLabelWidth">
@@ -108,8 +108,9 @@
   				currentPage: 1,		//当前页
   				dialogshow: false,
   				formLabelWidth: '80px',
-  				fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
-  				uploadmsg: '只能上传jpg/png文件，且不超过500kb'
+  				fileList: [],
+  				uploadmsg: '只能上传jpg/png文件，且不超过500kb',
+  				isimgerr: false
   			}
   		},
 
@@ -197,20 +198,24 @@
 		    },
 
 		    beforeUpload (file){
-		    	console.log(file);
+		    	this.isimgerr = false;
 		    	if(file.size / 1024 > 500)  {
 		    		this.uploadmsg = '文件过大，文件不得超过500KB';
+		    		this.isimgerr = true;
 		    		return false;
 		    	}
 		    	if(!gl.fn.testImg(file.type)){
 		    		this.uploadmsg = '文件格式不对，仅限jpg、png';
+		    		this.isimgerr = true;
 		    		return false;
 		    	}
 
+		    	this.uploadmsg = '只能上传jpg/png文件，且不超过500kb';
 		    	return true;
 		    },
 
 		    uploadSuccess (response, file, fileList){
+		    	console.log(fileList);
 		    	this.uploadmsg = '上传成功';
 		    }
   		},
