@@ -45,8 +45,13 @@
 		      	width="180px"
 		      	v-if="tonew">
 		      	<template scope="scope">
-		      		<a class="btn-a" @click="editIt(scope.row)">编辑</a>
-		      		<a class="btn-a" @click="delIt(scope.row)">删除</a>
+			        <el-button
+			          	size="small"
+			          	@click="editIt(scope.$index, scope.row)">编辑</el-button>
+			        <el-button
+			         	size="small"
+			          	type="danger"
+			          	@click="delIt(scope.$index, scope.row)">删除</el-button>
 		      	</template>
 		    </el-table-column>
 		</el-table>
@@ -62,15 +67,15 @@
 	    <el-dialog title="编辑基金经理" v-model="dialogshow" custom-class="dialog600">
 		  	<el-form :model="getManagerManagers">
 		    	<el-form-item label="名称" :label-width="formLabelWidth">
-		      		<el-input v-model="getManagerManagers.name" auto-complete="off"></el-input>
+		      		<el-input :value="getManagerManagers.name" auto-complete="off"></el-input>
 		    	</el-form-item>
 		    	<el-form-item label="头像" :label-width="formLabelWidth">
 					<el-upload
 					  	action="http://jsonplaceholder.typicode.com/posts/"
 					  	type="drag"
 					  	:thumbnail-mode="true"
-					  	:on-preview="handlePreview"
-					  	:on-remove="handleRemove"
+					  	:on-preview="uploadPreview"
+					  	:on-remove="uploadRemove"
 					  	:before-upload="beforeUpload"
 					  	:on-success="uploadSuccess"
 					  	:default-file-list="fileList"
@@ -101,7 +106,7 @@
   	export default{
   		data (){
   			return {
-  				showloading: true,
+  				showloading: false,
   				tableData: [],
   				total: 0,	//总数
   				size: 0,	//每页数量
@@ -128,7 +133,7 @@
 
         watch: {
         	getManagerManagers (){
-        		
+
         	},
 
         	getMcManagers (val){
@@ -172,28 +177,34 @@
 		    	}
 		    },
 
+		    getName (x){
+		    	return x;
+		    },
+
 		    getcurmanager (data){
 		    	// this.$store.dispatch('setCurManager', {data: data, whichmanager: this.whichmanager});
 		    },
 
-		    editIt (data){
+		    editIt (index, data){
 		    	this.$store.dispatch('setCurManager', {data: data, whichmanager: this.whichmanager});
+		    	this.fileList.push({url: data.avatar});
 		    	this.dialogshow = true;
 		    },
 
 		    dialogConfirm (){
 		    	this.dialogshow = false;
+		    	console.log(this.getManagerManagers);
 		    },
 
-		    delIt (data){
+		    delIt (index, data){
 
 		    },
 
-		    handleRemove(file, fileList) {
+		    uploadRemove(file, fileList) {
 		        console.log(file, fileList);
 		    },
 
-		    handlePreview(file) {
+		    uploadPreview(file) {
 		        console.log(file);
 		    },
 
@@ -215,13 +226,12 @@
 		    },
 
 		    uploadSuccess (response, file, fileList){
-		    	console.log(fileList);
 		    	this.uploadmsg = '上传成功';
 		    }
   		},
 
   		mounted (){
-  			this.getLists();
+  			
   		}
   	}
 </script>

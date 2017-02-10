@@ -130,6 +130,10 @@ gl.fn = {
 		return val.substr(0, len) + "...";
 	},
 
+	getValue(val){
+		return val;
+	},
+
 	// testImg(val){
 	// 	var reg = /^(.*)\.(jpg|jpeg|png)$/;
 	// 	return reg.test(val);
